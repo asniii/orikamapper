@@ -1,7 +1,9 @@
+import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import models.*;
+import models.custom_mappers.PersonCustomMapper;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -192,6 +194,53 @@ public class Main {
         //Here null will not be mapped because mapNullsInReverse is done false before mapping 'lastname' to 'surName'
         System.out.println(nameSource6.getFirstName() + " :: " + nameSource6.getLastName());
 
+        /*
+        * Field Level configuration
+        *
+        * */
+        MapperFactory mapperFactory9 = new DefaultMapperFactory.Builder().build();
+        mapperFactory9.classMap(NameSource.class,NameDest.class)
+                .fieldMap("firstName","name").mapNulls(false).add()
+                .field("lastName","surName")
+                .byDefault()
+                .register();
+        MapperFacade mapperFacade9 = mapperFactory9.getMapperFacade();
+        NameSource nameSource7 = new NameSource(null,"nehra");
+        NameDest nameDest7 = new NameDest("hilliary","clinton");
+        mapperFacade9.map(nameSource7, nameDest7);
+        //In this case, the configuration will only affect the name field as we have called it at field level:
+        System.out.println(nameDest7.getName() + " :: " + nameDest7.getSurName());
 
+        NameSource nameSource8 = new NameSource("aditya",null);
+        NameDest nameDest8 = new NameDest("hilliary","clinton");
+        mapperFacade9.map(nameSource8,nameDest8);
+        // In this case the null will be copied because mapsNull is applied only on 'firstName'
+        System.out.println(nameDest8.getName() + " :: " + nameDest8.getSurName());
+
+
+        /*
+        * Orika Custom Mapping
+        *
+        * how to convert to object of different type like
+        * 2007-06-26T21:22:39Z
+        *       to
+        * 1182882159000
+        *
+        * Clearly, non of the customizations we have covered so far suffices to convert between the two formats during
+        * the mapping process, not even Orika’s built in converter can handle the job. This is where we have to write a
+        * CustomMapper to do the required conversion during mapping.
+        * */
+        MapperFactory mapperFactory10 = new DefaultMapperFactory.Builder().build();
+        CustomMapper custom = new PersonCustomMapper();
+        mapperFactory10.classMap(Person.class, Personne.class)
+                .customize(custom)
+                .register();
+        MapperFacade mapperFacade10 = mapperFactory10.getMapperFacade();
+        String dateTime = "2007-06-26T21:22:39Z";
+        long timestamp = new Long("1182882159000");
+        Person person2 = new Person("leonardo ", dateTime.toString());
+        Personne personne = mapperFacade10.map(person2,Personne.class);
+        System.out.println(personne.getName() + " :: " + personne.getDtob());
+        
     }
 }
