@@ -30,7 +30,10 @@ public class Main {
         Source person = new Source("aditya", "aditya", "delhi", 16);
         Dest person1 = mapperFacade.map(person, Dest.class);
 
-        System.out.println(person1);
+        System.out.println("firstName  :: " + person1.getFirstName());
+        System.out.println("smallName  :: " + person1.getSmallName());
+        System.out.println("age        :: " + person1.getAge());
+        System.out.println("********************************************************************************************");
 
 
         /*
@@ -49,7 +52,10 @@ public class Main {
         PersonNameList src = new PersonNameList(nameList);
         PersonNameParts dest = mapperFacade1.map(src, PersonNameParts.class);
 
-        System.out.println(dest.getFirstName());
+        System.out.println("firstName   ::  " + dest.getFirstName());
+        System.out.println("lastName    ::  " + dest.getLastName());
+        System.out.println("********************************************************************************************");
+
 
         /*
          * Maps
@@ -69,7 +75,10 @@ public class Main {
         nameMap.put("last", "Dicaprio");
         PersonNameMap personNameMap = new PersonNameMap(nameMap);
         PersonNameParts personNameParts = mapperFacade2.map(personNameMap, PersonNameParts.class);
-        System.out.println(personNameParts.getFirstName());
+        System.out.println("firstName   ::  " + personNameParts.getFirstName());
+        System.out.println("lastName    ::  " + personNameParts.getLastName());
+        System.out.println("********************************************************************************************");
+
 
         /*
          * Map Nested field
@@ -86,6 +95,8 @@ public class Main {
         PersonContainer personContainer = new PersonContainer(new Name("Nick", "Canon"));
         PersonNameParts personNameParts1 = mapperFacade3.map(personContainer, PersonNameParts.class);
         System.out.println(personNameParts1.getLastName());
+        System.out.println("********************************************************************************************");
+
 
         /*
          * Mapping NULL values
@@ -103,6 +114,8 @@ public class Main {
         NameSource nameSource = new NameSource("aditya", null);
         NameDest nameDest = mapperFacade4.map(nameSource, NameDest.class);
         System.out.println(nameDest.getName() + " :: " + nameDest.getSurName());
+        System.out.println("********************************************************************************************");
+
 
 
         /*
@@ -124,6 +137,8 @@ public class Main {
         //What happens is that, by default, nulls are mapped. This means that even if a field value in the source object
         //is null and the corresponding field’s value in the destination object has a meaningful value, it will be overwritten.
         System.out.println(nameDest1.getName() + " :: " + nameDest1.getSurName());
+        System.out.println("********************************************************************************************");
+
 
 
         /*
@@ -149,6 +164,8 @@ public class Main {
         // Notice how we call mapNulls just before registering lastName field, this will cause all fields following the
         // mapNulls call to be ignored when they have null value.
         System.out.println(nameDest2.getName() + " :: " + nameDest2.getSurName());
+        System.out.println("********************************************************************************************");
+
 
         NameSource nameSource3 = new NameSource(null, "nehra");
         NameDest nameDest3 = new NameDest("hilliary", "clinton");
@@ -156,6 +173,8 @@ public class Main {
         // Notice how we call mapNulls after registering firstName field, this will cause null of firstName field to
         //copy to name field in nameDest3.
         System.out.println(nameDest3.getName() + " :: " + nameDest3.getSurName());
+        System.out.println("********************************************************************************************");
+
 
         /*
          * Bi-Directional mapping also accepts mapped null values
@@ -170,6 +189,8 @@ public class Main {
         NameDest nameDest4 = new NameDest(null, "cilton");
         mapperFacade7.map(nameDest4, nameSource4);
         System.out.println(nameSource4.getFirstName() + " :: " + nameSource4.getLastName());
+        System.out.println("********************************************************************************************");
+
 
 
         /*
@@ -187,12 +208,16 @@ public class Main {
         mapperFacade8.map(nameDest5, nameSource5);
         //Here null will be mapped because mapNullsInReverse is done false after mapping 'firstName' to 'name'.
         System.out.println(nameSource5.getFirstName() + " :: " + nameSource5.getLastName());
+        System.out.println("********************************************************************************************");
+
 
         NameSource nameSource6 = new NameSource("aditya", "nehra");
         NameDest nameDest6 = new NameDest("hilliary", null);
         mapperFacade8.map(nameDest6, nameSource6);
         //Here null will not be mapped because mapNullsInReverse is done false before mapping 'lastname' to 'surName'
         System.out.println(nameSource6.getFirstName() + " :: " + nameSource6.getLastName());
+        System.out.println("********************************************************************************************");
+
 
         /*
         * Field Level configuration
